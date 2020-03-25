@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  db:
+    image: postgres:12.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    depends_on:
+      - db
+    volumes:
+      - bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+
+volumes:
+  bundle:
+  postgresql:
