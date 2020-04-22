@@ -1,32 +1,4 @@
-require:
-  - rubocop-performance
-  - rubocop-rails
-
-Style/HashEachMethods:
-  Enabled: true
-Style/HashTransformKeys:
-  Enabled: true
-Style/HashTransformValues:
-  Enabled: true
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-AllCops:
-  TargetRubyVersion: 2.6
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
-  Exclude:
-    - '**/tmp/**/*'
-    - '**/templates/**/*'
-    - '**/vendor/**/*'
-    - 'actionpack/lib/action_dispatch/journey/parser.rb'
-    - 'railties/test/fixtures/tmp/**/*'
-    - 'actionmailbox/test/dummy/**/*'
-    - 'actiontext/test/dummy/**/*'
-    - '**/node_modules/**/*'
-
-Performance:
-  Exclude:
-    - '**/test/**/*'
+inherit_from:
+  - .rubocop.ruby.yml
+  - .rubocop.rails.yml
+  - .rubocop.performance.yml
