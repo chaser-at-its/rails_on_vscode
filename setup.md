@@ -12,9 +12,7 @@
   - Remote Containers(VSCode拡張)
 
 ## ファイルを書き換える
-Containerを作るために必要なファイルを用途に合わせて書き換える。特に以下ファイルの「myapp」と記載された箇所は、作りたいrailsアプリ名に変更すること。
-- .devcontainer/devcontainer.json
-- .devcontainer/docker-compose.yml
+Containerを作るために必要なファイルを用途に合わせて書き換える。「myapp」と記載された箇所は、作りたいrailsアプリ名に変更すること。
 
 ## Containerを作る
 railsアプリの開発環境であるContainerを作る。  
@@ -33,4 +31,14 @@ railsには、config/database.ymlの内容でDBを作成するコマンドがあ
 2. 以下コマンドを実行する。
 ```
 rails db:create
+```
+
+## 開発時もnginxを使う
+config/puma.rbの以下をコメントにする。
+```
+port        ENV.fetch("PORT") { 3000 }
+```
+config/puma.rbに以下を追加する。
+```
+bind "unix://#{Rails.root}/tmp/sockets/puma.sock"
 ```

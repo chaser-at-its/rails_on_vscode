@@ -1,25 +1,45 @@
-version: '2'
+version: '3'
 
 services:
+  web:
+    build:
+      context: ./docker/web
+    image: tiwvstiw/myapp_web
+    ports:
+      - "80:80"
+    volumes: 
+      # socketファイルの共有
+      - sockets:/myapp/tmp/sockets
+    depends_on: 
+      - app
+
+  app:
+    environment:
+      - RAILS_ENV=development
+      - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    image: tiwvstiw/myapp_app
+    depends_on:
+      - db
+    volumes:
+      - sockets:/myapp/tmp/sockets
+      - bundle:/usr/local/bundle
+    ports:
+      - "3000:3000"
+
   db:
     image: postgres:12.2
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - postgresql:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  app:
-    build: .
-    depends_on:
-      - db
-    volumes:
-      - bundle:/usr/local/bundle
-    ports:
-      - "3000:3000"
-
 volumes:
+  sockets:
   bundle:
-  postgresql:
+  db_data:
