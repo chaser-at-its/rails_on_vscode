@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  web:
+    image: tiwvstiw/myapp_web
+    ports:
+      - "0:80"
+    volumes: 
+      - sockets:/myapp/tmp/sockets
+
+  app:
+    environment:
+      - BUNDLE_WITHOUT=test:development
+      - RAILS_ENV=production
+      - NODE_ENV=production
+    image: tiwvstiw/myapp_app
+    volumes:
+      - sockets:/myapp/tmp/sockets
+    working_dir: /myapp
+    command: ["bundle", "exec", "rails", "server"]
+
+volumes:
+  sockets:
