@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Development",
+      "type": "Ruby",
+      "request": "launch",
+      "program": "${workspaceRoot}/bin/rails",
+      "args": [
+        "server"
+      ]
+    },
+    {
+      "name": "Production",
+      "type": "Ruby",
+      "request": "launch",
+      "env": {
+        "RAILS_ENV": "production",
+        "SECRET_KEY_BASE": "for_exec"
+      },
+      "program": "${workspaceRoot}/bin/rails",
+      "args": [
+        "server"
+      ]
+    },
+    {
+      "name": "Run active spec",
+      "type": "Ruby",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "useBundler": true,
+      "pathToBundler": "/usr/local/bundle/bin/bundle",
+      "pathToRDebugIDE": "/usr/local/bundle/bin/rdebug-ide",
+      "debuggerPort": "1235",
+      "program": "/usr/local/bundle/bin/rspec",
+      "args": [
+        "${file}"
+      ],
+      "env": {
+        "RAILS_ENV": "test"
+      }
+    },
+  ]
+}

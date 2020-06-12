@@ -1,0 +1,61 @@
+{
+  "cSpell.allowCompoundWords": true,
+  "cSpell.enableFiletypes": [
+    "css",
+    "erb",
+    "html",
+    "javascript",
+    "json",
+    "markdown",
+    "ruby",
+    "scss",
+    "text",
+    "yaml",
+    "yml",
+  ],
+  "cSpell.words": [
+    "Kaminari",
+    "Nokogiri",
+    "Struct",
+    "baukis",
+    "behaviour",
+    "behaviours",
+    "cicdpipe",
+    "csrf",
+    "devcontainer",
+    "falsey",
+    "furigana",
+    "gsub",
+    "mypage",
+    "plpgsql",
+    "postgres",
+    "rspec",
+    "rubocop",
+    "sprintf",
+    "strftime",
+    "tiwvstiw",
+    "unprocessable",
+    "xexample"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+
+  // Ruby
+  "[ruby]": {
+    "editor.formatOnSave": true
+  },
+  "[erb]": {
+    "editor.formatOnSave": true
+  },
+  "emmet.includeLanguages": {
+    "erb": "html"
+  },
+  "rubyTestExplorer.rspecCommand": "RAILS_ENV=test bundle exec rspec",
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.useBundler": true,
+  "vscode-erb-beautify.keepBlankLines": 1,
+}
