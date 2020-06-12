@@ -1,0 +1,109 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compose up
+        run: BUILD_CONTEXT="test" docker-compose -f docker-compose.yml -f .devcontainer/docker-compose.yml up -d
+
+      - name: DB setup
+        run: |
+          docker-compose exec -T app rails db:create
+          docker-compose exec -T app rails db:schema:load
+
+      - name: Run test
+        run: docker-compose exec -T app rspec
+
+  build_and_save_image:
+    runs-on: ubuntu-18.04
+    outputs:
+      image_version: ${{ steps.build_image.outputs.image_version }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        id: build_image
+        run: |
+          export IMAGE_VERSION=`date '+%y%m%d_%H%M'`
+          docker-compose -f docker-compose.yml build
+          echo "::set-output name=IMAGE_VERSION::$IMAGE_VERSION"
+
+      - name: Save image
+        run: |
+          mkdir image
+          docker save -o ./image/web tiwvstiw/myapp_web
+          docker save -o ./image/app tiwvstiw/myapp_app
+
+      - name: Upload image
+        uses: actions/upload-artifact@v2
+        with:
+          name: airflow-image
+          path: image
+
+  load_and_push_image:
+    needs: [test, build_and_save_image]
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download image
+        uses: actions/download-artifact@v2
+
+      - name: Load image
+        run: |
+          docker load -i ./airflow-image/web
+          docker load -i ./airflow-image/app
+
+      - name: Login to registry
+        env:
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: echo "${DOCKER_HUB_TOKEN}" | docker login -u tiwvstiw --password-stdin
+
+      - name: Push image
+        run: |
+          docker push tiwvstiw/myapp_web
+          docker push tiwvstiw/myapp_app
+
+  deploy:
+    needs: [build_and_save_image, load_and_push_image]
+    runs-on: ubuntu-18.04
+    env:
+      IMAGE_VERSION: ${{ needs.build_and_save_image.outputs.image_version }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install ECS CLI
+        run: |
+          mkdir -p "$HOME/tools/ecs-cli"
+          wget -N -O "$HOME/tools/ecs-cli/ecs-cli" "https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-v1.18.1"
+          chmod +x "$HOME/tools/ecs-cli/ecs-cli"
+          echo "::add-path::$HOME/tools/ecs-cli"
+
+      - name: Configure ECS CLI
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          ecs-cli configure profile --profile-name main --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY
+          ecs-cli configure --config-name main --cluster cl-main --region ap-northeast-1 --default-launch-type EC2
+
+      - name: Render Task Definition
+        run: |
+          ecs-cli compose -f docker-compose.yml create --cluster-config main
+
+      - name: Deploy Task Definition
+        env:
+          AWS_TARGET_GROUP_ARN: ${{ secrets.AWS_TARGET_GROUP_ARN }}
+        run: |
+          ecs-cli compose -f docker-compose.yml service up \
+            --deployment-min-healthy-percent 0 --deployment-max-percent 100 \
+            --target-group-arn $AWS_TARGET_GROUP_ARN \
+            --container-name web --container-port 80 --timeout 10 --cluster-config main

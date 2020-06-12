@@ -4,42 +4,48 @@ services:
   web:
     build:
       context: ./docker/web
-    image: tiwvstiw/myapp_web
+    image: tiwvstiw${APP_ROOT}_web:$IMAGE_VERSION
     ports:
-      - "80:80"
-    volumes: 
-      # socketファイルの共有
-      - sockets:/myapp/tmp/sockets
+      - "0:80"
+    volumes:
+      - public:$APP_ROOT/public
+      - sockets:$APP_ROOT/sockets
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-northeast-1
+        awslogs-group: myapp
+        awslogs-stream-prefix: myapp
     depends_on: 
       - app
 
   app:
-    environment:
-      - RAILS_ENV=development
-      - NODE_ENV=development
+    # ecs-cliでbuildはサポート対象外なため無視される
     build:
+      # buildでenvironmentを参照できないのでargsを使う
+      args:
+        - APP_ROOT=$APP_ROOT
+        - BUILD_CONTEXT=production
       context: .
       dockerfile: ./docker/app/Dockerfile
-    image: tiwvstiw/myapp_app
-    depends_on:
-      - db
-    volumes:
-      - sockets:/myapp/tmp/sockets
-      - bundle:/usr/local/bundle
-    ports:
-      - "3000:3000"
-
-  db:
-    image: postgres:12.2
+    image: tiwvstiw${APP_ROOT}_app:$IMAGE_VERSION
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - RAILS_LOG_TO_STDOUT=true
     volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - public:$APP_ROOT/public
+      - sockets:$APP_ROOT/tmp/sockets
+      - bundle:/usr/local/bundle
+      - yarn_cache:/usr/local/share/.cache/yarn/v2
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ap-northeast-1
+        awslogs-group: myapp
+        awslogs-stream-prefix: myapp
+    command: /bin/sh -c "./docker/app/entrypoint.sh"
 
 volumes:
+  public:
   sockets:
   bundle:
-  db_data:
+  yarn_cache:

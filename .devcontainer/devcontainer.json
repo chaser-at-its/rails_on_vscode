@@ -26,15 +26,22 @@
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "rebornix.ruby",
-    "bung87.rails",
+    "streetsidesoftware.code-spell-checker",
+
+    // Extension Pack
+    "aki77.rails-extension-pack",
+
+    // Ruby
+    "aliariff.vscode-erb-beautify",
     "castwide.solargraph",
-    "hridoy.rails-snippets",
-    "aki77.rails-db-schema",
-    "sporto.rails-go-to-spec",
     "kaiwood.endwise",
-    "jduponchelle.rainbow-end",
-    "misogi.ruby-rubocop"
+    "misogi.ruby-rubocop",
+    "rebornix.ruby",
+
+    // Frontend
+    "csstools.postcss",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
   ],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
@@ -44,7 +51,7 @@
   // "shutdownAction": "none",
 
   // Uncomment the next line to run commands after the container is created - for example installing git.
-  "postCreateCommand": "apt-get install -y git && bundle install --gemfile=.devcontainer/Gemfile",
+  // "postCreateCommand": "apt-get install -y git",
 
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
   // "remoteUser": "vscode"

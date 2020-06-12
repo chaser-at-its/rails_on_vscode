@@ -2,3 +2,59 @@ inherit_from:
   - .rubocop.ruby.yml
   - .rubocop.rails.yml
   - .rubocop.performance.yml
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Style/SymbolArray:
+  Enabled: false
+
+
+# Ruby on Rails 6 実践ガイド
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+# Rails/HasManyOrHasOneDependent:
+#   Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false
