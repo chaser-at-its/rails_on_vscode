@@ -4,7 +4,7 @@
 - 以下の基礎知識があること。
   - Docker
   - Docker Compose
-  - Remote Containers(VSCode拡張)  
+  - Remote Containers(VSCode拡張)
   - Ruby on Rails
 - 以下がインストール済であること。
   - Docker Desktop
@@ -13,22 +13,22 @@
 
 ## ファイルを書き換える
 - ミドルウェア、ライブラリ、フレームワークのバージョンを変更
-  - .devcontainer/docker-compose.yml  
+  - .devcontainer/docker-compose.yml
     postgres
-  - app/Dockerfile
+  - docker/app/Dockerfile
     - node
     - yarn
     - ruby
     - bundler
-  - web/Dockerfile  
+  - web/Dockerfile
     nginx
-  - Gemfile  
+  - Gemfile
     rails
-- アプリ名の変更  
+- アプリ名の変更
   Containerを作るために必要なファイルを用途に合わせて書き換える。「myapp」と記載された箇所は、作りたいrailsアプリ名に変更すること。
 
 ## Containerを作る
-railsアプリの開発環境であるContainerを作る。  
+railsアプリの開発環境であるContainerを作る。
 VSCodeでアプリのルートディレクトリをContainerにアタッチすることで、WindowsとContainerの双方でファイル操作が可能になる。アタッチ時にContainerが存在しなければ、VSCodeがDocker Composeで自動作成する。
 1. VSCode画面左下の「リモートウィンドウを開く」をクリックする。
 2. 「Remote-Containers: Reopen in Container」をクリックする。
