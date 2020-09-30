@@ -1,5 +1,5 @@
 # ecs-cli
-クラスタ、ロードバランサー(ターゲットグループも)は先に作っておく。  
+クラスタ、ロードバランサー、ターゲットグループは先に作っておく。  
 クラスタはecs-cliでも作れるが、何度も作るわけではないのでecs-cliを使わない。
 
 ## インストール
@@ -17,12 +17,12 @@ ecs-cli compose -f docker-compose.yml create --cluster-config main
 - タスク実行  
   テストのため。本番はサービスでデプロイする。
 ```
-ecs-cli compose -f docker-compose.yml up --cluster-config main
+ecs-cli compose -f docker-compose.yml up --cluster-config main --launch-type FARGATE
 ```
 
 - タスク終了
 ```
-ecs-cli compose -f docker-compose.yml down --cluster-config main
+ecs-cli compose -f docker-compose.yml down --cluster-config main --launch-type FARGATE
 ```
 
 ## サービス
@@ -31,8 +31,9 @@ ecs-cli compose -f docker-compose.yml down --cluster-config main
 ```
 ecs-cli compose -f docker-compose.yml service create `
 --deployment-min-healthy-percent 0 --deployment-max-percent 100 `
---target-group-arn arn:aws:elasticloadbalancing:ap-northeast-1:002782830721:targetgroup/tg-main/cafe7d12d5a821a7 `
---container-name web --container-port 80 --cluster-config main
+--target-group-arn [target group arn] `
+--container-name app --container-port 3000 `
+--cluster-config main --launch-type FARGATE
 ```
 
 - タスク数調整
@@ -46,6 +47,7 @@ ecs-cli compose -f docker-compose.yml service scale 1
 ```
 ecs-cli compose -f docker-compose.yml service up `
 --deployment-min-healthy-percent 0 --deployment-max-percent 100 `
---target-group-arn arn:aws:elasticloadbalancing:ap-northeast-1:002782830721:targetgroup/tg-main/cafe7d12d5a821a7 `
---container-name web --container-port 80 --timeout 10 --cluster-config main
+--target-group-arn [target group arn] `
+--container-name app --container-port 3000 `
+--cluster-config main --launch-type FARGATE
 ```

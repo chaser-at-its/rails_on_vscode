@@ -1,48 +1,32 @@
 version: '3'
 
 services:
-  web:
-    build:
-      context: ./docker/web
-    image: tiwvstiw${APP_ROOT}_web:$IMAGE_VERSION
-    ports:
-      - "0:80"
-    volumes:
-      - public:$APP_ROOT/public
-      - sockets:$APP_ROOT/sockets
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: ap-northeast-1
-        awslogs-group: myapp
-        awslogs-stream-prefix: myapp
-    depends_on: 
-      - app
-
   app:
     # ecs-cliでbuildはサポート対象外なため無視される
     build:
       # buildでenvironmentを参照できないのでargsを使う
       args:
-        - APP_ROOT=$APP_ROOT
+        - APP_NAME=$APP_NAME
         - BUILD_CONTEXT=production
       context: .
-      dockerfile: ./docker/app/Dockerfile
-    image: tiwvstiw${APP_ROOT}_app:$IMAGE_VERSION
+      dockerfile: ./docker/Dockerfile
+    image: tiwvstiw/${APP_NAME}:${BUILD_CONTEXT}-${IMAGE_VERSION}
     environment:
       - RAILS_LOG_TO_STDOUT=true
     volumes:
-      - public:$APP_ROOT/public
-      - sockets:$APP_ROOT/tmp/sockets
+      - public:/${APP_NAME}/public
+      - sockets:/${APP_NAME}/tmp/sockets
       - bundle:/usr/local/bundle
       - yarn_cache:/usr/local/share/.cache/yarn/v2
+    ports:
+      - "3000:3000"
     logging:
       driver: awslogs
       options:
         awslogs-region: ap-northeast-1
-        awslogs-group: myapp
-        awslogs-stream-prefix: myapp
-    command: /bin/sh -c "./docker/app/entrypoint.sh"
+        awslogs-group: $APP_NAME
+        awslogs-stream-prefix: $APP_NAME
+    command: /bin/sh -c "./entrypoint.sh"
 
 volumes:
   public:

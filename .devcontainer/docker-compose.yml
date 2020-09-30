@@ -1,24 +1,16 @@
 version: '3'
 
 services:
-  web:
-    image: tiwvstiw${APP_ROOT}_web:$BUILD_CONTEXT
-    ports:
-      - "80:80"
-    logging:
-      driver: json-file
-
   app:
     build:
       args:
-        - APP_ROOT=$APP_ROOT
         - BUILD_CONTEXT=$BUILD_CONTEXT
-    image: tiwvstiw${APP_ROOT}_app:$BUILD_CONTEXT
     environment:
       - RAILS_LOG_TO_STDOUT=
       - SPROCKETS_CACHE=/sprockets_cache
     volumes:
-      - .:/myapp
+      - .:/${APP_NAME}
+      - node_modules:/${APP_NAME}/node_modules
       - sprockets_cache:/sprockets_cache
     logging:
       driver: json-file
@@ -27,13 +19,14 @@ services:
   db:
     image: postgres:13-alpine
     environment:
-      POSTGRES_USER: myapp
-      POSTGRES_PASSWORD: myapp
+      POSTGRES_USER: $APP_NAME
+      POSTGRES_PASSWORD: $APP_NAME
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
 volumes:
+  node_modules:
   sprockets_cache:
   db_data:

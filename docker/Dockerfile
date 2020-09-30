@@ -6,7 +6,7 @@ RUN apk add --no-cache bash curl && \
 
 FROM ruby:2.7.1-alpine
 
-ARG APP_ROOT
+ARG APP_NAME
 ARG BUILD_CONTEXT
 ARG APP_DEPS=' \
     postgresql-client \
@@ -31,7 +31,7 @@ ENV LANG=ja_JP.UTF-8 \
     BUNDLE_JOBS=4 \
     BUNDLE_RETRY=3
 
-WORKDIR $APP_ROOT
+WORKDIR /${APP_NAME}
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /opt/yarn-* /opt/yarn
@@ -42,5 +42,5 @@ RUN ln -fs /opt/yarn/bin/yarn /usr/local/bin/yarn && \
     cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
     gem update --system && \
     gem install --no-document bundler:2.1.4 && \
-    chmod +x ./docker/app/setup-${BUILD_CONTEXT}.sh && \
-    ./docker/app/setup-${BUILD_CONTEXT}.sh
+    chmod +x ./docker/setup/${BUILD_CONTEXT}.sh && \
+    ./docker/setup/${BUILD_CONTEXT}.sh

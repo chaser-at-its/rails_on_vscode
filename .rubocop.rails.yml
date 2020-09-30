@@ -26,6 +26,3 @@ Rails/RequestReferer:
 
 Rails/DynamicFindBy:
   Enabled: false
-
-Rails/FilePath:
-  Enabled: false

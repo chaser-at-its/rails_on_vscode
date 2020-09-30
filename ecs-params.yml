@@ -1,16 +1,25 @@
 version: 1
 task_definition:
-  ecs_network_mode: bridge
+  ecs_network_mode: awsvpc
   task_execution_role: ecsTaskExecutionRole
   task_size:
-    cpu_limit: 128
-    mem_limit: 256
+    cpu_limit: 256
+    mem_limit: 512
   services:
     app:
       secrets:
         - value_from: ps-myapp-db-endpoint
-          name: myapp_DATABASE_ENDPOINT
+          name: MYAPP_DATABASE_ENDPOINT
         - value_from: ps-myapp-db-pass
-          name: myapp_DATABASE_PASSWORD
+          name: MYAPP_DATABASE_PASSWORD
         - value_from: ps-myapp-rails-secret-key-base
           name: SECRET_KEY_BASE
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - "subnet-0fc68dd16a51ef644"
+        - "subnet-0e9a7d406faeed5d5"
+      security_groups:
+        - "sg-00f91f2d28edd1529"
+      assign_public_ip: ENABLED

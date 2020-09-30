@@ -15,13 +15,11 @@
 - ミドルウェア、ライブラリ、フレームワークのバージョンを変更
   - .devcontainer/docker-compose.yml
     postgres
-  - docker/app/Dockerfile
+  - docker/Dockerfile
     - node
     - yarn
     - ruby
     - bundler
-  - web/Dockerfile
-    nginx
   - Gemfile
     rails
 - アプリ名の変更
@@ -35,7 +33,7 @@ VSCodeでアプリのルートディレクトリをContainerにアタッチす�
 
 ## railsアプリを作る
 ```
-rails new . --database=postgresql
+rails new . --database=postgresql --skip-sprockets --skip-test
 ```
 既存ファイルの上書きについて、以下のようなメッセージが表示される。
 ```
@@ -43,8 +41,8 @@ Overwrite /myapp/README.md? (enter "h" for help) [Ynaqdhm]
 ```
 「.gitignore」以外「Y」で。
 
-## Gemfileを編集する
-### 開発用gemを追加する
+## 開発用パッケージを追加する
+### Gemfileを編集する
 group :developmentに以下を追加する。
 ```
 # For debugging
@@ -57,7 +55,29 @@ gem "rubocop-performance", require: false
 gem "rubocop-rails", require: false
 gem "solargraph"
 ```
+以下を
+```
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+```
+以下のように編集する
+```
+gem 'tzinfo-data'
+```
 **bundle installを忘れずに**
+
+### package.jsonを編集する
+devDependenciesに以下を追加する。
+```
+"eslint": "^6.8.0",
+"eslint-config-prettier": "^6.11.0",
+"eslint-plugin-prettier": "^3.1.3",
+"prettier": "^2.0.5",
+"stylelint": "^13.3.3",
+"stylelint-config-prettier": "^8.0.1",
+"stylelint-config-standard": "^20.0.0",
+"stylelint-prettier": "^1.1.2",
+"stylelint-scss": "^3.17.1",
+```
 
 ## DBを作る
 railsには、config/database.ymlの内容でDBを作成するコマンドがある。それを実行する。
@@ -67,12 +87,30 @@ railsには、config/database.ymlの内容でDBを作成するコマンドがあ
 rails db:create
 ```
 
-## 開発時もnginxを使う
-config/puma.rbの以下をコメントにする。
+## credentials.yml.encとmaster.keyを削除する
+productionへの配置が面倒なので、configからcredentials.yml.encとmaster.keyを削除し、secrets.ymlを配置する。
+secrets.ymlの中身は以下の通り。
 ```
-port        ENV.fetch("PORT") { 3000 }
+production:
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 ```
-config/puma.rbに以下を追加する。
+**productionのSECRET_KEY_BASEは各クラウド環境で安全に管理すること。**
+
+## RSpecの導入
+group :testに以下を追加する。
 ```
-bind "unix://#{Rails.root}/tmp/sockets/puma.sock"
+gem "factory_bot_rails"
+gem "rspec-rails"
 ```
+https://github.com/takutoki/baukis2/tree/master/spec のrails_helper.rb、spec_helper.rbをコピペする。
+
+### FactoryBotでエラーが出たら
+rails_helper.rbに以下を追加する。
+```
+config.before(:all) do
+  FactoryBot.reload
+end
+```
+
+## [Asset PipelineからWebpackへ](https://techracho.bpsinc.jp/hachi8833/2017_12_26/49931)
+全部Webpackerでやる

@@ -3,58 +3,103 @@ inherit_from:
   - .rubocop.rails.yml
   - .rubocop.performance.yml
 
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
-
-Layout/SpaceAroundMethodCallOperator:
+Lint/DeprecatedOpenSSLConstant:
   Enabled: true
-
-Lint/RaiseException:
+Lint/DuplicateElsifCondition:
   Enabled: true
-
-Lint/StructNewOverride:
+Lint/MixedRegexpCaptureTypes:
   Enabled: true
-
-Style/ExponentialNotation:
+Style/AccessorGrouping:
   Enabled: true
-
-Style/HashEachMethods:
+Style/ArrayCoercion:
   Enabled: true
-
-Style/HashTransformKeys:
+Style/BisectedAttrAccessor:
   Enabled: true
-
-Style/HashTransformValues:
+Style/CaseLikeIf:
   Enabled: true
-
+Style/HashAsLastArrayItem:
+  Enabled: true
+Style/HashLikeCase:
+  Enabled: true
+Style/RedundantAssignment:
+  Enabled: true
+Style/RedundantFetchBlock:
+  Enabled: true
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
 Style/SlicingWithRange:
   Enabled: true
-
-Style/SymbolArray:
-  Enabled: false
-
-
-# Ruby on Rails 6 実践ガイド
-Lint/AmbiguousBlockAssociation:
-  Enabled: false
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-Rails/HelperInstanceVariable:
-  Enabled: false
-
-# Rails/HasManyOrHasOneDependent:
-#   Enabled: false
-
-Rails/InverseOf:
-  Enabled: false
-
-Rails/OutputSafety:
-  Enabled: false
+Performance/AncestorsInclude:
+  Enabled: true
+Performance/BigDecimalWithNumericArgument:
+  Enabled: true
+Performance/RedundantSortBlock:
+  Enabled: true
+Performance/RedundantStringChars:
+  Enabled: true
+Performance/ReverseFirst:
+  Enabled: true
+Performance/SortReverse:
+  Enabled: true
+Performance/Squeeze:
+  Enabled: true
+Performance/StringInclude:
+  Enabled: true
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: true
+Lint/DuplicateRescueException:
+  Enabled: true
+Lint/EmptyConditionalBody:
+  Enabled: true
+Lint/FloatComparison:
+  Enabled: true
+Lint/MissingSuper:
+  Enabled: true
+Lint/OutOfRangeRegexpRef:
+  Enabled: true
+Lint/SelfAssignment:
+  Enabled: true
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+Lint/UnreachableLoop:
+  Enabled: true
+Style/ExplicitBlockArgument:
+  Enabled: true
+Style/GlobalStdStream:
+  Enabled: true
+Style/OptionalBooleanParameter:
+  Enabled: true
+Style/SingleArgumentDig:
+  Enabled: true
+Style/StringConcatenation:
+  Enabled: true
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+Rails/FindById:
+  Enabled: true
+Rails/Inquiry:
+  Enabled: true
+Rails/MailerName:
+  Enabled: true
+Rails/MatchRoute:
+  Enabled: true
+Rails/NegateInclude:
+  Enabled: true
+Rails/Pluck:
+  Enabled: true
+Rails/PluckInWhere:
+  Enabled: true
+Rails/RenderInline:
+  Enabled: true
+Rails/RenderPlainText:
+  Enabled: true
+Rails/ShortI18n:
+  Enabled: true
+Rails/WhereExists:
+  Enabled: true
